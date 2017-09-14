@@ -16,6 +16,10 @@ Sh:=excel.Worksheets["Sheet2"]
 zhi:=sh.Range("B3").value 
 num:= sh.Range("B3").text  
 
+;获取存储变量长度的函数，当初这个困扰了很久
+InputVar := zhi
+ro:= StrLen(InputVar) 
+
 ;插入其他ahk需要用到的参数
 #Include C:\test_game\find.ahk
 
