@@ -29,4 +29,13 @@ loop
   Break
   }
  
-;
+;同样的，还有循环找颜色直到找到为止的命令，是否需要第一个参数，不是很清楚
+CoordMode,Pixel
+Loop
+{
+ PixelGetColor,tuy,631,525
+ PixelGetColor,tue,535,532
+ PixelGetColor,tus,890,536 
+ if (tuy = "0xFFFFFF" and tue = "0xFFFFFF" and tus = "0xFFFFFF" )
+ break
+ } 
