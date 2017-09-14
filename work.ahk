@@ -18,3 +18,15 @@ num:= sh.Range("B3").text
 
 ;插入其他ahk需要用到的参数
 #Include C:\test_game\find.ahk
+
+;持续找图，直到找到的命令，在循环前加一点时间可能会更好，反正时需要等待
+#Include C:\test_game\find.ahk
+Sleep,300
+quer:="|<确认>23.0UEFtsEUYE111024Ti4Cd48py8ceYFFLseXeFcZIWF1311U"
+loop
+  {
+  if 查找文字(859,674,50,50,quer,"*113",X,Y,OCR,0,0)
+  Break
+  }
+ 
+;
