@@ -1,4 +1,4 @@
-;调用英文输入法
+;调用英文输入法，使用if语句是，后面记得加括号，如if （i>1）
 SendMessage,0x50,0,67699721,,A
 
 ;弹出提示框，并输入需要的
@@ -43,3 +43,19 @@ Loop
  if (tuy = "0xFFFFFF" and tue = "0xFFFFFF" and tus = "0xFFFFFF" )
  break
  } 
+ 
+ ;一个强大的找text函数，feiyue老师提供
+ S1:=获取屏幕坐标处的文本(985,703)
+   获取屏幕坐标处的文本(x, y) {
+  BlockInput, MouseMove
+  CoordMode, Mouse
+  MouseGetPos, 初始X, 初始Y
+  ;-- 瞬间移动
+  MouseMove, x, y, 0
+  MouseGetPos,,,, cid, 2
+  ControlGetText, s,, ahk_id %cid%
+  ;-- 瞬间移动
+  MouseMove, 初始x, 初始y, 0
+  BlockInput, MouseMoveOff
+  return, s
+}
