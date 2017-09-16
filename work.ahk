@@ -72,6 +72,17 @@ Loop
   return, s
 }
 
+;-- 利用快捷键抓点并直接生成代码，feiyue老师提供
+F2::
+CoordMode, Mouse
+MouseGetPos, x, y
+s=%x%, %y%
+Clipboard:=s
+ToolTip, 抓点成功！可直接粘贴代码！
+Sleep, 500
+ToolTip
+return
+
 ;选中需要的文字，并删除
 MouseClickDrag, L, 255,120, 52,120
 Sleep,50
