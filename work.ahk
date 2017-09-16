@@ -30,9 +30,9 @@ Sleep,300
 quer:="|<确认>23.0UEFtsEUYE111024Ti4Cd48py8ceYFFLseXeFcZIWF1311U"
 loop
   {
-  Click,705,90 ;当前检测的窗口
+  Click,705,90 ;会跳出的窗口
   Sleep ,1000
-  Click,838,90 ;目标窗口
+  Click,838,90 ;当前检测的窗口
   Sleep,1000
   if 查找文字(859,674,50,50,quer,"*113",X,Y,OCR,0,0)
   Break
