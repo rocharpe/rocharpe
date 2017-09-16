@@ -24,11 +24,16 @@ ro:= StrLen(InputVar)
 #Include C:\test_game\find.ahk
 
 ;持续找图，直到找到的命令，在循环前加一点时间可能会更好，反正时需要等待
+;根据观察，发现光简单的循环不能满足当前的需求，因为需要的窗口会变动，所以在if前面增加了几个按键，应该可以解决当前的需求
 #Include C:\test_game\find.ahk
 Sleep,300
 quer:="|<确认>23.0UEFtsEUYE111024Ti4Cd48py8ceYFFLseXeFcZIWF1311U"
 loop
   {
+  Click,705,90 ;当前检测的窗口
+  Sleep ,1000
+  Click,838,90 ;目标窗口
+  Sleep,1000
   if 查找文字(859,674,50,50,quer,"*113",X,Y,OCR,0,0)
   Break
   }
