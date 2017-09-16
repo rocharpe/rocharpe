@@ -64,3 +64,8 @@ Loop
   BlockInput, MouseMoveOff
   return, s
 }
+
+;选中需要的文字，并删除
+MouseClickDrag, L, 255,120, 52,120
+Sleep,50
+send , {bs}
