@@ -2,6 +2,10 @@
 SendMessage,0x50,0,134481924,,A ;中文键盘
 SendMessage,0x50,0,67699721,,A ;英文键盘
 SendMessage,0x50,0,-534640636,,A ;搜狗输入法
+;还有一个方法比较灵活，通过查询注册表的键值来调用输入法，比如搜狗的为E0220804
+HKL:=DllCall("LoadKeyboardLayout", Str,"E02208048",UInt,1)
+ControlGetFocus,ctl,A
+SendMessage,0x50,0,HKL,%ctl%,A
 
 ;弹出提示框，并输入需要的
 InputBox ,time,标题,***F4启动***ESC暂停***`r`n***F5刷新***F11退出***`r`n`r`n***请关闭输入法***`r`n输入,,200,200
