@@ -69,3 +69,14 @@ Loop
 MouseClickDrag, L, 255,120, 52,120
 Sleep,50
 send , {bs}
+
+SendEvent {Click 6, 52, down}{click 45, 52, up} ;同样的效果，根据兼容性
+
+;鼠标操作
+Click, right ;右击鼠标
+Click  ; 在鼠标光标的当前位置点击鼠标左键.
+Click 100, 200  ; 在指定坐标处点击鼠标左键.
+Click 100, 200, 0  ; 移动而不点击鼠标.
+Click 100, 200 right  ; 点击鼠标右键.
+Click 2  ; 执行双击.
+
