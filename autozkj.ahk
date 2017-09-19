@@ -1,5 +1,5 @@
 F4::
-InputBox ,time,CDMS 2.5,***F4启动***ESC暂停***`r`n***F5刷新***F11退出***`r`n`r`n***请关闭输入法***`r`n输入单量,,200,200
+InputBox ,time,版本,***F4启动***ESC暂停***`r`n***F5刷新***F11退出***`r`n`r`n***请关闭输入法***`r`n输入单量,,200,200
 i:=0
 loop %time%
 { 
@@ -42,7 +42,7 @@ if (ro < 9)
 else 
     {
     ;~ 输入单号
-    Click , 800,10 ;CDMS位置
+    Click , 800,10 ;软件位置
     Sleep,200
     SendMessage,0x50,0,67699721,,A
     Sleep,50
@@ -382,7 +382,7 @@ if (S1<50 and S2<50 and S3<50)
                 
     ; 跳出后，点击单号
     outer:
-    Click , 800,10 ;CDMS位置
+    Click , 800,10 ;软件位置
     Sleep,200
     tiaocu:="|<>51.SE8000002+0000004kE000000X2tDbz7DfCN9YnNBgUO98oFDcY3F96W914UO9AYFA8YSF9wW8x4s0080000000100000000800000U"
     if 查找文字(326,77,50,50,tiaocu,"**50",X,Y,OCR,0,0)
