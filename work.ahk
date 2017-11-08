@@ -88,7 +88,11 @@ MouseClickDrag, L, 255,120, 52,120
 Sleep,50
 send , {bs}
 
-SendEvent {Click 6, 52, down}{click 45, 52, up} ;同样的效果，根据兼容性
+SendEvent {Click 6, 52, down}{click 45, 52, up} ;同样的效果，更具兼容性
+
+;直接修改框架里的内容
+#IfWinActive ahk_exe ;先指定需要操作控件的ClassNN，可以用spy查看
+ControlSetText , edit1 , %var% ;同样的eiit1可以使用spy查看，后面可以用变量
 
 ;鼠标操作
 Click, right ;右击鼠标
