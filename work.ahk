@@ -102,3 +102,15 @@ Click 100, 200, 0  ; 移动而不点击鼠标.
 Click 100, 200 right  ; 点击鼠标右键.
 Click 2  ; 执行双击.
 
+;网页搜索
+Click
+Sleep 100
+send ^A
+Sleep 100
+Clipboard =  https://www.baidu.com/s?wd=%Clipboard%
+Sleep 100
+send ^v
+send {enter}
+Sleep 100
+Clipboard=
+Sleep 100
