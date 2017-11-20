@@ -1,5 +1,5 @@
 ;激活IE浏览器，在原来的窗口重复搜索复制的内容
-WinActivate ahk_class IEFrame
+WinActivate ahk_class IEFrame ;激活IE浏览器
 Send !d ;原来的窗口输入网址alt+D
 Sleep 50
 Clipboard =  https://www.baidu.com/s?wd=%Clipboard%
