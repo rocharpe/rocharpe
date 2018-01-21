@@ -1,4 +1,0 @@
-http://club.excelhome.net/thread-513353-1-1.html
-'统计颜色 
-'选中A1单元格，然后定义一个好记的名称
-=GET.CELL(63,Sheet1!A1)
