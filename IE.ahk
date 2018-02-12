@@ -9,14 +9,21 @@ Send !d ;定位网址窗口，输入网址alt+D
 ComObjError(false) ;关闭对象错误提示
 ie:=IEGetFromUrl("www.baidu.com")  ;获取包含https://www.baidu.com网页的一个选项卡
 
-search:="rocharpe"	;定义要搜索的变量
+;定义要搜索的变量
+search:="rocharpe"	
 ie.document.getElementById("kw").value:=search   ;通过ie.doucument对当前网页进行操作
-ie.document.GetElementsById("su").GetElementsByTagName("submit").item(0).Click() ;点击搜索,其中的item(0)代表第一次出现
+;点击搜索,其中的item(0)代表第一次出现
+ie.document.GetElementsById("su").GetElementsByTagName("submit").item(0).Click() 
 send , {enter}
 
+;点击百度首页新闻，即id=u1，标签为a第一次出现的链接
 sleep , 3800
-ie.document.getElementById("u1").GetElementsByTagName("a").item(0).Click() ;点击百度首页新闻，即id=u1，标签为a第一次出现的链接
-
+ie.document.getElementById("u1").GetElementsByTagName("a").item(0).Click() 
+;获取链接下的内容
+biaoqian:=ie.document.getElementById("u1").GetElementsByTagName("a").item(3).innerHTML
+texta:=ie.document.getElementById("su").value
+sen:=ie.document.getElementById("lh").GetElementsByTagName("a").item(0).innerHTML
+MsgBox %biaoqian% %texta% %sen%
 
 
 ;===========================================
