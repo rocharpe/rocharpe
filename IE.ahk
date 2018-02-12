@@ -11,7 +11,7 @@ ie:=IEGetFromUrl("www.baidu.com")  ;获取包含https://www.baidu.com网页的�
 
 ;定义要搜索的变量
 search:="rocharpe"	
-ie.document.getElementById("kw").value:=search   ;通过ie.doucument对当前网页进行操作
+ie.document.getElementById("kw").value:=search   ;通过ie.doucument对当前网页进行操作,kw为搜索框
 ;点击搜索,其中的item(0)代表第一次出现
 ie.document.GetElementsById("su").GetElementsByTagName("submit").item(0).Click() 
 send , {enter}
