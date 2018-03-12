@@ -130,7 +130,7 @@ BlockInput, MouseMove
 WinActivate ahk_class IEFrame 
 While ie.readyState != 4 || ie.document.readyState != "complete" || wb.busy
 sleep,200
-ie.document.GetElementsByTagName("input").item(4).value:=hawb  ;通过ie.doucument对当前网页进行操作,kw为搜索框
+ie.document.GetElementsByTagName("input").item(4).value:=thwab  ;通过ie.doucument对当前网页进行操作,kw为搜索框
 send ,^+S
 While ie.readyState != 4 || ie.document.readyState != "complete" || wb.busy
   sleep,200
