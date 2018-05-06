@@ -1,17 +1,21 @@
-﻿/*
-修改坐标
+/*
+修改坐标,通过F2获取坐标点
 
-ohwabb:=gethwnd() ;hwab字母位置(用来判断)
-ohwab:=gethwnd() ;运单号
-odecvalue:=gethwnd() ;货值
-oshipper:=gethwnd() ;发件人
-olocal:=gethwnd() ;收件人
-oaddr:=gethwnd() ;地址一
-oaddrr:=gethwnd() ;地址二
-ohscodee:=gethwnd() ;hscode字母位置(用来判断)
-ohscode:=gethwnd() ;商品编码
-odesc:=gethwnd() ;中文品名
-ogrowt:=gethwnd() ;毛重
+ohwabb:=gethwnd(904, 196) ;hwab字母位置(用来判断)
+ohwab:=gethwnd(967, 196) ;运单号
+odecvalue:=gethwnd(957, 280) ;货值
+oshipper:=gethwnd(388, 344) ;发件人
+olocal:=gethwnd(762, 366) ;收件人
+oaddr:=gethwnd(369, 385) ;地址一
+oaddrr:=gethwnd(697, 385) ;地址二
+ohscodee:=gethwnd(314, 721) ;hscode字母位置(用来判断)
+ohscode:=gethwnd(380, 723) ;商品编码
+odesc:=gethwnd(381, 763) ;中文品名
+ogrowt:=gethwnd(636, 846) ;毛重
+ocrno:=gethwnd(356, 433) ;海关编码 1111960286
+ocrname:=gethwnd(550, 433) ;中外运敦豪保税仓储（北京）有限公司
+ControlGetText, tcrno, %ocrno%, ahk_exe CDMSImport.exe
+ControlGetText, tcrname, %ocrname%, ahk_exe CDMSImport.exe
 
 */
 
@@ -22,7 +26,9 @@ return
 
 F1::
 CDMS:
+CoordMode, Mouse
 WinActivate ahk_exe CDMSImport.exe
+Sleep,500
 ControlClick,Button1,ahk_exe CDMSImport.exe
 Sleep,50
 
@@ -30,9 +36,9 @@ gosub AA
 gosub BB
 
 ;==================================
-if (thscodee="HsCode:" and thwabb="Hawb:") ;此处判断CDMS是否更新句柄
+if (tcrno="1111960286" and tcrname="中外运敦豪保税仓储（北京）有限公司") ;此处判断CDMS是否更新句柄
 {
-	MsgBox , 请确认`r`n%thwabb%  %thwab%`r`nShipper:  %tshipper%`r`nLocal_Name:  %tlocal%`r`n%thscodee%  %thscode%
+	MsgBox , 请确认`r`nHawb:  %thwab%`r`nShipper:  %tshipper%`r`nLocal_Name:  %tlocal%`r`nCR Name:  %tcrname%
 }
 else
 {
@@ -41,7 +47,15 @@ else
 }
 return
 
-
+F2::
+CoordMode, Mouse
+MouseGetPos, x, y
+s=%x%, %y%
+Clipboard:=s
+ToolTip, 抓点成功！可直接粘贴代码！
+Sleep, 1000
+ToolTip
+return
 
 
 
@@ -55,13 +69,16 @@ ComObjError(false) ;关闭对象错误提示
 
 ;=================================================
 ;点击错误报警框,同时获取判断的参数HsCode:和Hawb:及其他
+ControlClick,Button1,ahk_exe CDMSImport.exe
+Sleep,50
 WinActivate ahk_exe CDMSImport.exe
+Sleep,100
 ControlClick,Button1,ahk_exe CDMSImport.exe
 Sleep,50
 gosub BB
 ;=================================================
 
-if (thscodee="HsCode:" and thwabb="Hawb:") ;此处判断CDMS是否更新布局
+if (tcrno="1111960286" and tcrname="中外运敦豪保税仓储（北京）有限公司") ;此处判断CDMS是否更新布局
 {
 WinActivate ahk_class IEFrame 
 ie:=IEGetFromUrl("npts2.apis.dhl.com")  ;获取包含指定网页的一个选项卡
@@ -98,14 +115,14 @@ MsgBox 注意公司`r`n`r`nGETINGE件数有X需核件核重
 sleep,50
 
 ;核重
-if  (InStr(tlocal,"dresser") or InStr(tlocal,"dms")) 
+if  (InStr(tlocal,"dresser") or InStr(tlocal,"dms") or InStr(tlocal,"SYNVENTIVE")) 
 {
-MsgBox 苏州的dresser和dms需要核重
+MsgBox 苏州的dresser、dms、SYNVENTIVE需要核重
 }
 sleep,50
 
 ;特殊公司GE/JABIL
-if (InStr(tlocal,"ge ") or InStr(tlocal,"jabil")) 
+if (InStr(tlocal,"ge ")="1" or InStr(tlocal,"jabil")) 
 {
 MsgBox 注意特殊公司`r`nGE 78 JINYING ROAD`r`nJABIL 600 ROAD
 }
@@ -126,7 +143,7 @@ MsgBox FUTURE ELECTRONICS 重量看发票`r`n`r`nCOVANCE 重量认运单,不用�
 sleep,50
 ;===========================================================================================================
 
-BlockInput, MouseMove
+
 WinActivate ahk_class IEFrame 
 While ie.readyState != 4 || ie.document.readyState != "complete" || wb.busy
 sleep,200
@@ -140,7 +157,7 @@ While ie.readyState != 4 || ie.document.readyState != "complete" || wb.busy
   sleep,300
   send,{enter}
   
-
+BlockInput, MouseMove
 ;======================================================================
 ;不管有没有hs,先做空处理
 WinActivate ahk_exe CDMSImport.exe
@@ -158,8 +175,8 @@ send,^a
 }
 else
 {
-	msgbox , 失败!!!即将退出`r`n1.CDMS是否有提示框存在？请关闭它`r`n`r`n2.请确认是否在MP状态下打开？`r`n`r`n3.还是不行？那就需要更新坐标点
-	ExitApp
+	msgbox , 失败!!!`r`n`r`n按 F1 重试`r`n%thscodee% `r`n%thwabb%
+	
 }
 BlockInput, MouseMoveOff
 return
@@ -206,17 +223,24 @@ AA:
 ;==================================================
 ;获取坐标对应的控件名
 BlockInput, MouseMove
-ohwabb:=gethwnd(398,342) ;hwab字母位置(用来判断)
-ohwab:=gethwnd(398,342) ;运单号
-odecvalue:=gethwnd(398,342) ;货值
-oshipper:=gethwnd(398,342) ;发件人
-olocal:=gethwnd(398,342) ;收件人
-oaddr:=gethwnd(398,342) ;地址一
-oaddrr:=gethwnd(398,342) ;地址二
-ohscodee:=gethwnd(398,342) ;hscode字母位置(用来判断)
-ohscode:=gethwnd(398,342) ;商品编码
-odesc:=gethwnd(398,342) ;中文品名
-ogrowt:=gethwnd(398,342) ;毛重
+
+;ohwabb:=gethwnd(904, 196) ;hwab字母位置(用来判断)
+ohwab:=gethwnd(967, 196) ;运单号
+odecvalue:=gethwnd(957, 280) ;货值
+oshipper:=gethwnd(388, 344) ;发件人
+olocal:=gethwnd(762, 366) ;收件人
+oaddr:=gethwnd(369, 385) ;地址一
+oaddrr:=gethwnd(697, 385) ;地址二
+
+ocrno:=gethwnd(356, 433) ;海关编码 1111960286
+ocrname:=gethwnd(550, 433) ;中外运敦豪保税仓储（北京）有限公司
+
+;ohscodee:=gethwnd(314, 721) ;hscode字母位置(用来判断)
+ohscode:=gethwnd(380, 723) ;商品编码
+odesc:=gethwnd(381, 763) ;中文品名
+ogrowt:=gethwnd(636, 846) ;毛重
+
+
 BlockInput, MouseMoveOff
 return
 
@@ -224,6 +248,9 @@ return
 BB:
 ;=============================================================
 ;获取文本
+ControlGetText, tcrno, %ocrno%, ahk_exe CDMSImport.exe
+ControlGetText, tcrname, %ocrname%, ahk_exe CDMSImport.exe
+
 ControlGetText, thwabb, %ohwabb%, ahk_exe CDMSImport.exe
 ControlGetText, thwab, %ohwab%, ahk_exe CDMSImport.exe
 ControlGetText, tdecvalue, %odecvalue%, ahk_exe CDMSImport.exe
@@ -231,7 +258,7 @@ ControlGetText, tshipper, %oshipper%, ahk_exe CDMSImport.exe
 ControlGetText, tlocal, %olocal%, ahk_exe CDMSImport.exe
 ControlGetText, taddr, %oaddr%, ahk_exe CDMSImport.exe
 ControlGetText, taddrr, %oaddrr%, ahk_exe CDMSImport.exe
-ControlGetText, thscodee, %ohscodee%, ahk_exe CDMSImport.exe
+;ControlGetText, thscodee, %ohscodee%, ahk_exe CDMSImport.exe
 ControlGetText, thscode, %ohscode%, ahk_exe CDMSImport.exe
 ControlGetText, tdesc, %odesc%, ahk_exe CDMSImport.exe
 ControlGetText, tgrowt, %ogrowt%, ahk_exe CDMSImport.exe
