@@ -1,22 +1,24 @@
 ;==========================================================
 ;获取位置参数
-TrayTip,鼠标移动到 <中文品名> 的位置按【F1】,. ,10,17
+msgbox 鼠标移到 单号-->按  F2`r`n鼠标移到 中文品名-->按F1`r`n`r`nF4启动
 return
 F1::
 CoordMode, Mouse
-MouseGetPos, cx, cy
+MouseGetPos, cx, cy, cdms, control
+;~ MouseGetPos, cx, cy
 odesc:=gethwnd(%cx%, %cy%) ;运单号
-ControlGetText, desc, %odesc%, ahk_exe CDMSImport.exe
+ControlGetText, desc, %odesc%, ahk_id %cdms%
 TrayTip,鼠标移动到 <单号> 的位置按【F2】,Desc(CN):%desc% ,10,17
 return
 F2::
 CoordMode, Mouse
-MouseGetPos, dx, dy
+MouseGetPos, dx, dy, cdms, control
 ohwab:=gethwnd(%dx%, %dy%) ;运单号
-ControlGetText, hawb, %ohwab%, ahk_exe CDMSImport.exe
+ControlGetText, hawb, %ohwab%, ahk_id %cdms%
 TrayTip,按【F4】 启动,Hawb:%hawb%,10,17
 return
 ;==========================================================
+
 
 F4::
 #SingleInstance,force
@@ -25,62 +27,89 @@ CoordMode,mouse
 ComObjError(false) ;关闭对象错误提示
 
 ;====================================================
-;定义要搜索的变量
+;定义要搜索的变量,DA为单号一,DB为单号二,PM为中文品名
+
 AA:
 BlockInput, MouseMove
 DA:=DB:=PM:=""
 WinActivate ahk_exe CDMSImport.exe
-ControlGetText, DA, %ohwab%, ahk_exe CDMSImport.exe
-ControlGetText, PM, %odesc%, ahk_exe CDMSImport.exe
+ControlGetText, DA, %ohwab%, ahk_id %cdms%
+ControlGetText, PM, %odesc%, ahk_id %cdms%
 ;====================================================
 
-if (DA<>"" and PM="")
+if (DA="")
 {
-ControlSetText, %odesc%, 零件, ahk_exe CDMSImport.exe
-Sleep,50
-send {PGDN}
-Sleep,100
-i:=0
+	Sleep,100
+	goto AA
+}
 
-BB:
-DB:=""
-i:=i+1
-ControlGetText, DB, %ohwab%, ahk_exe CDMSImport.exe
-if (DA=DB and i<150)
-{
 Sleep,100
-goto BB
-}
-else
+
+if (PM="")
 {
-goto AA
-}
-}
-else
+	ControlSetText, %odesc%, 零件, ahk_id %cdms%
+	Sleep,50
+	send {PGDN}
+	Sleep,500
+
+	i:=0
+
+	BB:
+	DB:=""
+	i:=i+1
+	ControlGetText, DB, %ohwab%, ahk_id %cdms%
+	Sleep,50
+	if (DA=DB and i<25)
 	{
-	Send {Volume_Up}
-    Sleep,50
-    SoundSet, 60
-	loop , 3
-        {
-        SoundBeep, 2100, 500
-        Sleep,200
-        }
+		Sleep,500
+		goto BB
+	}
+	else
+	{
+		Sleep,500
+		goto AA
+	}
+}
+
+;~ if (DA<>DB and DB<>"" or i>25)
+;~ {
+	;~ Sleep,500
+	;~ goto AA
+;~ }
+;~ else
+;~ {
+	;~ Sleep,500
+	;~ goto BB
+;~ }
+
+
+if (PM<>"" and DA<>"")
+	{
+		Send {Volume_Up}
+		Sleep,50
+		SoundSet, 60
+		loop , 3
+			{
+				SoundBeep, 2500, 500
+				Sleep,200
+			}
 	} 
 
-Sleep,150
+Sleep,100
 goto AA 
 return
 
 
 ESc::
-BlockInput, MouseMoveOff
-    Send {Volume_Up}
-    Sleep,50
-    SoundSet, 0
-
-ExitApp
+	BlockInput, MouseMoveOff
+	Send {Volume_Up}
+	Sleep,50
+	SoundSet, 0
+	ExitApp
 return
+
+
+
 
 
 
