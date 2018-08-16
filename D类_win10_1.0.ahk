@@ -19,10 +19,16 @@ ControlGetText, tcrname, %ocrname%, ahk_exe CDMSImport.exe
 
 */
 
-;~ MsgBox,4097,获取CDMS参数, 按 确定 获取CDMS下参数信息`r`n`r`n需在CDMS编辑界面操作
-;~ IfMsgBox, ok 
-    ;~ gosub CDMS 
-;~ return 
+#SingleInstance,force
+CoordMode,Pixel
+CoordMode,mouse
+#Include C:\test_game\find.ahk
+ComObjError(false) ;关闭对象错误提示
+
+MsgBox,4097,获取CDMS参数, 按 确定 获取CDMS下参数信息`r`n`r`n需在CDMS编辑界面操作
+IfMsgBox, ok 
+    gosub CDMS 
+return 
 
 F1::
 ;==============================
@@ -57,14 +63,8 @@ Sleep, 1000
 ToolTip
 return
 
-#a::
-
-#SingleInstance,force
-CoordMode,Pixel
-CoordMode,mouse
-#Include C:\test_game\find.ahk
-ComObjError(false) ;关闭对象错误提示
-
+`::
+/*
 ;=================================================
 ;点击NPTS的页面
 nptsweb:="|<>42.1U000006900000AFU0000MgkMX0EF2EMn0EW209G0EXy89GCL8089GHNHzsBGTFG005AEF13k6AMNMwE6ADTA1U00003z00000U"
@@ -77,7 +77,10 @@ if 查找文字(1944,41,150,150,nptsweb,"**35",X,Y,OCR,0,0)
   click
 }
 ;=================================================
+*/
 
+iWeb_Activate("NPTS - A DHL Product") 
+iWeb_Activate("WebFSQ - ShipmentDetails") 
 
 ;=================================================
 ;点击错误报警框,同时获取判断的参数HsCode:和Hawb:及其他
@@ -167,7 +170,11 @@ WinActivate ahk_class IEFrame
 While ie.readyState != 4 || ie.document.readyState != "complete" || wb.busy
 sleep,200
 ie.document.GetElementsByTagName("input").item(4).value:=thwab  ;通过ie.doucument对当前网页进行操作,kw为搜索框
-send ,^+S
+sleep,50
+ie.document.GetElementsByTagName("searchButton").item(0).Click()
+sleep,50
+ie.document.getElementById("searchButton").Click()
+;send ,^+S
 While ie.readyState != 4 || ie.document.readyState != "complete" || wb.busy
   sleep,200
   send,{enter}
@@ -204,14 +211,14 @@ send,^a
 }
 else
 {
-	msgbox , 失败!!!`r`n`r`n按 F1 重试`r`n%thscodee% `r`n%thwabb%
-	
+msgbox , 失败!!!`r`n`r`n按 F1 重试`r`n%thscodee% `r`n%thwabb%	
 }
 BlockInput, MouseMoveOff
 return
 
 ;=================================
 ;激活CDMS
+1::
 F7::
 WinActivate ahk_id %cdms%
 return
@@ -227,7 +234,6 @@ return
 
 ;============================================
 ;定位到毛重
-
 numlock:: 
 WinActivate ahk_id %cdms%
 ControlClick,%ogrowt%,ahk_id %cdms%
@@ -247,31 +253,24 @@ excel.Selection.ClearContents
 ;excel.Range("A1").Select
 return
 
-Tab::
-WinActivate, ahk_class XLMAIN
-return
+;Tab::
+;WinActivate, ahk_class XLMAIN
+;return
 
 ;========================================
 ;激活Pdf文件
-CapsLock::
-WinActivate, ahk_class AcrobatSDIWindow
-return
+;CapsLock::
+;WinActivate, ahk_class AcrobatSDIWindow
+;return
 
 #IfWinActive,ahk_class AcrobatSDIWindow
 {
-	
-	
- ~Numpad0::^0
- NumpadIns::^0
- ~Numpad5::^+-
- ~Numpad6::^++
-
- ~Numpad4::PGDN
- ~Numpad7::PGUP
-
-
- ~Numpad8::^NumpadAdd
-
+ ~Numpad0::^0 	 ;还原
+ ~Numpad5::^+-	 ;逆时针
+ ~Numpad6::^++ 	 ;顺时针
+ ~Numpad4::PGDN  ;下一页
+ ~Numpad7::PGUP	 ;上一页
+ ~Numpad8::^NumpadAdd ;放大
 }
 #IfWinActive
  return
