@@ -34,7 +34,7 @@ F1::
 ;==============================
 CDMS:
 CoordMode, Mouse
-MouseMove ,728, 218
+MouseMove ,967, 196
 Sleep,100
 send,{enter}
 Sleep,100
@@ -49,18 +49,8 @@ if (tcrno="1111960286" and tcrname="中外运敦豪保税仓储（北京）有�
 }
 else
 {
-	msgbox , 失败!!!即将退出`r`n1.CDMS是否有提示框存在？请关闭它`r`n`r`n2.最大化CDMS窗口于左屏
+	msgbox , 失败!!!`r`n1.CDMS是否有提示框存在？请关闭它`r`n`r`n2.最大化CDMS窗口于左屏
 }
-return
-
-F2::
-CoordMode, Mouse
-MouseGetPos, x, y
-s=%x%, %y%
-Clipboard:=s
-ToolTip, 抓点成功！可直接粘贴代码！
-Sleep, 1000
-ToolTip
 return
 
 `::
@@ -79,17 +69,17 @@ if 查找文字(1944,41,150,150,nptsweb,"**35",X,Y,OCR,0,0)
 ;=================================================
 */
 
-iWeb_Activate("NPTS - A DHL Product") 
-iWeb_Activate("WebFSQ - ShipmentDetails") 
-
 ;=================================================
 ;点击错误报警框,同时获取判断的参数HsCode:和Hawb:及其他
 WinActivate ahk_id %cdms%
-Sleep,100
+Sleep,50
 ControlClick,Button1,ahk_exe CDMSImport.exe
 Sleep,50
-send,{enter}
-Sleep,100
+
+iWeb_Activate("NPTS - A DHL Product") 
+iWeb_Activate("WebFSQ - ShipmentDetails") 
+Sleep,50
+
 gosub BB
 ;=================================================
 
@@ -218,7 +208,6 @@ return
 
 ;=================================
 ;激活CDMS
-1::
 F7::
 WinActivate ahk_id %cdms%
 return
@@ -253,16 +242,18 @@ excel.Selection.ClearContents
 ;excel.Range("A1").Select
 return
 
-;Tab::
-;WinActivate, ahk_class XLMAIN
-;return
+;========================================
+;激活Pdf文件及轮流切换Excel和pdf
+CapsLock::
+SetTitleMatchMode,2
+IfWinActive, ahk_class AcrobatSDIWindow
+	WinActivate, ahk_class XLMAIN
+else
+	WinActivate, ahk_class AcrobatSDIWindow
+return
 
 ;========================================
-;激活Pdf文件
-;CapsLock::
-;WinActivate, ahk_class AcrobatSDIWindow
-;return
-
+;pdf文件操作
 #IfWinActive,ahk_class AcrobatSDIWindow
 {
  ~Numpad0::^0 	 ;还原
@@ -274,8 +265,18 @@ return
 }
 #IfWinActive
  return
+ 
 ;========================================
-
+;获取鼠标坐标
+F2::
+CoordMode, Mouse
+MouseGetPos, x, y
+s=%x%, %y%
+Clipboard:=s
+ToolTip, 抓点成功！可直接粘贴代码！
+Sleep, 1000
+ToolTip
+return
 
 AA:
 ;==================================================
