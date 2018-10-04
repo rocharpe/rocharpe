@@ -21,9 +21,20 @@ ie:=IEGetFromUrl("www.baidu.com")
 
 ;==========================================================================
 ;等待网页加载完毕
-While ie.readyState != 4 || ie.document.readyState != "complete" || wb.busy
+While ie.readyState != 4 || ie.document.readyState != "complete" || ie.busy
     Sleep, 100
     
+;同样是等待,不知道效果 
+loop
+{
+if (ie.document.getElementById("contentFrame").contentDocument.readyState="complete" )
+break
+} 
+
+;======================================
+;获取某ID下的所有信息
+ie.document.getElementById("sendListTipDiv").innerHTML
+
 ;================
 ;定义要搜索的变量
 search:="rocharpe"
