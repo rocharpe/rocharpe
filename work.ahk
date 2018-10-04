@@ -55,7 +55,26 @@ Loop
  if (tuy = "0xFFFFFF" and tue = "0xFFFFFF" and tus = "0xFFFFFF" )
  break
  } 
- 
+
+;获取系统坐标下的控件
+ gethwnd(ByRef xl,ByRef yl)
+{
+return DllCall( "WindowFromPoint", "int", xl, "int", yl )
+}
+
+;通过鼠标箭头下方的位置,获取控件,缺点是如果获取数量多,体验不好
+gethwnd(x,y)	
+{
+  BlockInput, MouseMove
+  CoordMode, Mouse
+  MouseGetPos, newX, newY
+  MouseMove, x, y, 0
+  MouseGetPos,x,y,id,oHWND
+  MouseMove, newx, newy, 0
+  BlockInput, MouseMoveOff
+  return,oHWND
+}
+
  ;一个强大的找text函数，feiyue老师提供
  S1:=获取屏幕坐标处的文本(985,703)
    获取屏幕坐标处的文本(x, y) {
