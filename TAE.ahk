@@ -1,12 +1,3 @@
-;========================================
-;获取鼠标坐标
-F2::
-pwb := ComObjCreate("InternetExplorer.Application")
-pwb.Visible := 1
-pwb.Navigate("http://www.infoccsp.com/sso")
-return
-
-
 F4::
 InputBox ,s,泰益物流,`r`n***F4    启动***`r`n***ESC  退出***`n`r`n输入单号位置,,200,200
 if (s="")
@@ -34,13 +25,18 @@ tt:=sh.Cells(s, 1).text
 ;======================================
 ;拆分单号
 danhao:=SubStr(tt, 1, 3)"-"SubStr(tt, 4, 7)"` "SubStr(tt,0, 1)
-ie:=IEGetFromUrl("www.infoccsp.com")  ;获取包含指定网页的一个选项卡
+;~ ie:=IEGetFromUrl("www.infoccsp.com")  ;获取包含指定网页的一个选项卡
+
+;======================================
+;获取当前页的文档
+ie:=WBGet() 
 Sleep 300
 ie.document.getElementById("frmright").contentDocument.getElementById("awbFullNo").value:=danhao ;运单号码赋值
 Sleep 300
 ie.document.getElementById("frmright").contentDocument.getElementById("btnNext").Click() ;点击下一步
 sleep,300
-
+;~ next:=ie.document.getElementById("frmright").contentDocument.getElementById("awbFullNo").value
+;~ MsgBox %next%
 ;===================================================
 ;等待页面加载完毕
 loop
@@ -74,6 +70,7 @@ else
 		;------------------------------------------------------------------------------
 		;判断是否为修改
 		change:=ie.document.getElementById("frmright").contentDocument.GetElementsByTagName("a").item(2).innerHTML 
+		;~ MsgBox %change%
 		if (InStr(change,"修改"))
 		{
 			ie.document.getElementById("frmright").contentDocument.GetElementsByTagName("a").item(2).Click() ;点击修改
@@ -206,7 +203,13 @@ return
 
 
 
-
+;========================================
+;获取鼠标坐标
+F2::
+ie := ComObjCreate("InternetExplorer.Application")
+ie.Visible := 1
+ie.Navigate("http://www.infoccsp.com/sso/ui-agent_index.do")
+return
 
 
 
@@ -334,6 +337,23 @@ return
 
 ;=======================================================================================
 ;获取包含指定url的IE选项卡对象,从而成功操作对应的doucment对象
+
+WBGet(WinTitle="ahk_class IEFrame", Svr#=1) {               ;// based on ComObjQuery docs
+   static msg := DllCall("RegisterWindowMessage", "str", "WM_HTML_GETOBJECT")
+        , IID := "{0002DF05-0000-0000-C000-000000000046}"   ;// IID_IWebBrowserApp
+;//     , IID := "{332C4427-26CB-11D0-B483-00C04FD90119}"   ;// IID_IHTMLWindow2
+   SendMessage msg, 0, 0, Internet Explorer_Server%Svr#%, %WinTitle%
+   if (ErrorLevel != "FAIL") {
+      lResult:=ErrorLevel, VarSetCapacity(GUID,16,0)
+      if DllCall("ole32\CLSIDFromString", "wstr","{332C4425-26CB-11D0-B483-00C04FD90119}", "ptr",&GUID) >= 0 {
+         DllCall("oleacc\ObjectFromLresult", "ptr",lResult, "ptr",&GUID, "ptr",0, "ptr*",pdoc)
+         return ComObj(9,ComObjQuery(pdoc,IID,IID),1), ObjRelease(pdoc)
+      }
+   }
+}
+
+
+
 IEGetFromUrl(url){
 	for window in ComObjCreate("Shell.Application").Windows
 	{
@@ -353,40 +373,6 @@ IEGetFromTabName(IETabName)
 }
 
 
-;======================================
-gethwnd(ByRef xl,ByRef yl)
-{
-return DllCall( "WindowFromPoint", "int", xl, "int", yl )
-}
-
-
-gethwndd(x,y)	
-{
-  BlockInput, MouseMove
-  CoordMode, Mouse
-  MouseGetPos, newX, newY
-  MouseMove, x, y, 0
-  MouseGetPos,x,y,id,oHWND
-  MouseMove, newx, newy, 0
-  BlockInput, MouseMoveOff
-  return,oHWND
-}
-
-
-  gettext(x, y) {
-  BlockInput, MouseMove
-  CoordMode, Mouse
-  MouseGetPos, newX, newY
-  ;-- 瞬间移动
-  MouseMove, x, y, 0
-  MouseGetPos,,,, cid, 2
-  ControlGetText, s,, ahk_id %cid%
-  ;-- 瞬间移动
-  MouseMove, newx, newy, 0
-  BlockInput, MouseMoveOff
-  return, s
-}
-	
 
 	stop:
     ESc::
