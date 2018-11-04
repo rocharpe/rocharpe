@@ -1,3 +1,6 @@
+;======================
+;读取一个csv文件,进行数组关联
+
 #SingleInstance,force
 CoordMode,Pixel
 CoordMode,mouse
